@@ -1,0 +1,34 @@
+################################################################################
+# setup device defaults
+################################################################################
+
+  # The TARGET_CPU variable controls which processor should be targeted for
+  # generated code.
+    case $TARGET_ARCH in
+      arm)
+        TARGET_FLOAT="hard"
+        TARGET_CPU="cortex-a7"
+        TARGET_FPU="neon-vfpv4"
+        TARGET_FEATURES="32bit"
+        ;;
+    esac
+
+  # Kernel target
+    KERNEL_TARGET="zImage"
+
+  # Additional kernel make parameters (for example to specify the u-boot loadaddress)
+    KERNEL_MAKE_EXTRACMD=" rk322x-box.dtb "
+
+  # Mali GPU family
+    MALI_FAMILY="400"
+    GRAPHIC_DRIVERS="lima"
+
+  # kernel serial console
+    EXTRA_CMDLINE="console=uart8250,mmio32,0x11030000 console=tty0"
+
+  # set the addon project
+    ADDON_PROJECT="ARMv7"
+
+    ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware mpv-drmprime"
+
+    IR_REMOTE_KEYMAPS=" tanix_tx5max x96max "
