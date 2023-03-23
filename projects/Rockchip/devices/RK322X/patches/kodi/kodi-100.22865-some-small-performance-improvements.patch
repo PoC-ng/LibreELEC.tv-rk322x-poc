@@ -1,7 +1,7 @@
-From bb9b83d6a5d84adeaa1d253e1bbd0bbd0d64f112 Mon Sep 17 00:00:00 2001
+From 9754ecdc6b980522277bd1fb7906769ca57c6050 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Markus=20H=C3=A4rer?= <markus.haerer@gmx.net>
 Date: Sun, 19 Feb 2023 17:26:28 +0100
-Subject: [PATCH 1/5] CURL: Make ::Decode() faster by obmitting a temporary and
+Subject: [PATCH 1/6] CURL: Make ::Decode() faster by obmitting a temporary and
  using std::from_chars
 
 The method was coming up in Valgrind with the DHAT tool in "copy mode". The
@@ -101,10 +101,10 @@ index 77c12cc38f240..4707c1ae4d79e 100644
  
    /*! \brief Check whether a URL is a given URL scheme.
 
-From 2b86156ed4c98d9d41fb25fab30a38e80f445a83 Mon Sep 17 00:00:00 2001
+From ef34810a72844d19a25e9c7d937ef88d8aab131d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Markus=20H=C3=A4rer?= <markus.haerer@gmx.net>
 Date: Sun, 26 Feb 2023 01:51:28 +0100
-Subject: [PATCH 2/5] CURL: Have ::Encode() accept a std::string_view to match
+Subject: [PATCH 2/6] CURL: Have ::Encode() accept a std::string_view to match
  ::Decode()
 
 Also get rid of the temporary std::string creation while on it.
@@ -173,10 +173,10 @@ index 4707c1ae4d79e..af0be6fb12918 100644
    /*! \brief Check whether a URL is a given URL scheme.
     Comparison is case-insensitive as per RFC1738
 
-From 5f6512f91b1588ae98c725f99920cb83bab578b4 Mon Sep 17 00:00:00 2001
+From eaa0c8a81f38f638cbccbed507a209d9487caa4f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Markus=20H=C3=A4rer?= <markus.haerer@gmx.net>
 Date: Fri, 3 Feb 2023 02:12:46 +0100
-Subject: [PATCH 3/5] CDirtyRegionTracker: Make the CleanMarkedRegions() method
+Subject: [PATCH 3/6] CDirtyRegionTracker: Make the CleanMarkedRegions() method
  more efficient
 
 Without that change >100MB of data are copied around inside the vector every
@@ -186,7 +186,7 @@ second according to Valgrinds DHAT tool in "copy mode".
  1 file changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/xbmc/guilib/DirtyRegionTracker.cpp b/xbmc/guilib/DirtyRegionTracker.cpp
-index 398d455031989..f74bb54fc1776 100644
+index 398d455031989..a016601ad9e6e 100644
 --- a/xbmc/guilib/DirtyRegionTracker.cpp
 +++ b/xbmc/guilib/DirtyRegionTracker.cpp
 @@ -10,10 +10,12 @@
@@ -216,14 +216,14 @@ index 398d455031989..f74bb54fc1776 100644
 -  }
 +  m_markedRegions.erase(
 +      std::remove_if(m_markedRegions.begin(), m_markedRegions.end(),
-+                     [buffering](CDirtyRegion& r) { return r.UpdateAge() > buffering; }),
++                     [buffering](CDirtyRegion& r) { return r.UpdateAge() >= buffering; }),
 +      m_markedRegions.end());
  }
 
-From e720cc6860017c583f634fb504418213b214b234 Mon Sep 17 00:00:00 2001
+From 476c2485e0fd99799f1a0c46752283a7331ef1b6 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Markus=20H=C3=A4rer?= <markus.haerer@gmx.net>
 Date: Sun, 5 Feb 2023 15:38:01 +0100
-Subject: [PATCH 4/5] CGUIFontTTF: Reserve scripts vector size
+Subject: [PATCH 4/6] CGUIFontTTF: Reserve scripts vector size
 
 ---
  xbmc/guilib/GUIFontTTF.cpp | 1 +
@@ -242,10 +242,10 @@ index 6b38fb0cbbc0c..36d1b633ac0f5 100644
    {
      scripts.emplace_back(hb_unicode_script(ufuncs, static_cast<wchar_t>(0xffff & character)));
 
-From d67bd160318471ff7eb1e6dd459edc8b674986fb Mon Sep 17 00:00:00 2001
+From 0c0b81790d923bd4c31ffbe213ee308372717973 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Markus=20H=C3=A4rer?= <markus.haerer@gmx.net>
 Date: Sun, 5 Feb 2023 23:04:29 +0100
-Subject: [PATCH 5/5] CVariant: Add ref qualified versions of asString and
+Subject: [PATCH 5/6] CVariant: Add ref qualified versions of asString and
  asWideString
 
 This allows to reuse the std::(w)string when calling as(Wide)String on a
@@ -317,3 +317,98 @@ index 9d48a3df23bfa..981193427b2b8 100644
    double asDouble(double fallback = 0.0) const;
    float asFloat(float fallback = 0.0f) const;
  
+
+From 3c07d6cd1e230f1e6553d64c1c69613e81be0cf7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Markus=20H=C3=A4rer?= <markus.haerer@gmx.net>
+Date: Sat, 11 Mar 2023 20:17:13 +0100
+Subject: [PATCH 6/6] CVariant: Add ref qualified versions of operator[]
+
+---
+ xbmc/utils/Variant.cpp | 24 ++++++++++++++++++++----
+ xbmc/utils/Variant.h   | 10 ++++++----
+ 2 files changed, 26 insertions(+), 8 deletions(-)
+
+diff --git a/xbmc/utils/Variant.cpp b/xbmc/utils/Variant.cpp
+index 82400b6ce2d9b..8eb7e34f7ad01 100644
+--- a/xbmc/utils/Variant.cpp
++++ b/xbmc/utils/Variant.cpp
+@@ -559,7 +559,7 @@ std::wstring CVariant::asWideString(const std::wstring& fallback /*= L""*/) &&
+     return asWideString(fallback);
+ }
+ 
+-CVariant &CVariant::operator[](const std::string &key)
++CVariant& CVariant::operator[](const std::string& key) &
+ {
+   if (m_type == VariantTypeNull)
+   {
+@@ -573,7 +573,7 @@ CVariant &CVariant::operator[](const std::string &key)
+     return ConstNullVariant;
+ }
+ 
+-const CVariant &CVariant::operator[](const std::string &key) const
++const CVariant& CVariant::operator[](const std::string& key) const&
+ {
+   VariantMap::const_iterator it;
+   if (m_type == VariantTypeObject && (it = m_data.map->find(key)) != m_data.map->end())
+@@ -582,7 +582,15 @@ const CVariant &CVariant::operator[](const std::string &key) const
+     return ConstNullVariant;
+ }
+ 
+-CVariant &CVariant::operator[](unsigned int position)
++CVariant CVariant::operator[](const std::string& key) &&
++{
++  if (m_type == VariantTypeObject)
++    return std::move((*m_data.map)[key]);
++  else
++    return ConstNullVariant;
++}
++
++CVariant& CVariant::operator[](unsigned int position) &
+ {
+   if (m_type == VariantTypeArray && size() > position)
+     return m_data.array->at(position);
+@@ -590,7 +598,7 @@ CVariant &CVariant::operator[](unsigned int position)
+     return ConstNullVariant;
+ }
+ 
+-const CVariant &CVariant::operator[](unsigned int position) const
++const CVariant& CVariant::operator[](unsigned int position) const&
+ {
+   if (m_type == VariantTypeArray && size() > position)
+     return m_data.array->at(position);
+@@ -598,6 +606,14 @@ const CVariant &CVariant::operator[](unsigned int position) const
+     return ConstNullVariant;
+ }
+ 
++CVariant CVariant::operator[](unsigned int position) &&
++{
++  if (m_type == VariantTypeArray && size() > position)
++    return std::move(m_data.array->at(position));
++  else
++    return ConstNullVariant;
++}
++
+ CVariant &CVariant::operator=(const CVariant &rhs)
+ {
+   if (m_type == VariantTypeConstNull || this == &rhs)
+diff --git a/xbmc/utils/Variant.h b/xbmc/utils/Variant.h
+index 981193427b2b8..1b9ee7a85e143 100644
+--- a/xbmc/utils/Variant.h
++++ b/xbmc/utils/Variant.h
+@@ -94,10 +94,12 @@ class CVariant
+   double asDouble(double fallback = 0.0) const;
+   float asFloat(float fallback = 0.0f) const;
+ 
+-  CVariant &operator[](const std::string &key);
+-  const CVariant &operator[](const std::string &key) const;
+-  CVariant &operator[](unsigned int position);
+-  const CVariant &operator[](unsigned int position) const;
++  CVariant& operator[](const std::string& key) &;
++  const CVariant& operator[](const std::string& key) const&;
++  CVariant operator[](const std::string& key) &&;
++  CVariant& operator[](unsigned int position) &;
++  const CVariant& operator[](unsigned int position) const&;
++  CVariant operator[](unsigned int position) &&;
+ 
+   CVariant &operator=(const CVariant &rhs);
+   CVariant& operator=(CVariant&& rhs) noexcept;

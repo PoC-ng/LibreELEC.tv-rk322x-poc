@@ -1,7 +1,7 @@
 <advancedsettings version="1.0">
  <gui>
     <fronttobackrendering>true</fronttobackrendering>
-    <algorithmdirtyregions>1</algorithmdirtyregions>
-    <hardwaredirtyregions>true</hardwaredirtyregions>
+    <!-- algorithmdirtyregions>1</algorithmdirtyregions -->
+    <!-- hardwaredirtyregions>true</hardwaredirtyregions -->
   </gui>
 </advancedsettings>
