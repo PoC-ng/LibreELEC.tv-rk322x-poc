@@ -1,5 +1,11 @@
-1
-- aspnet6-runtime: update to 6.0.15
+4
+- aspnet6-runtime: update to 6.0.19
+
+3
+- aspnet6-runtime: update to 6.0.18
 
 2
 - aspnet6-runtime: update to 6.0.16
+
+1
+- aspnet6-runtime: update to 6.0.15
