@@ -1445,9 +1445,9 @@ index c9ac346514f18..f1ca2a9611a03 100644
  
 +#include "guilib/TextureFormats.h"
 +
+ #include <cstdint>
  #include <string>
  #include <vector>
- 
 @@ -61,6 +63,7 @@ class RGBAImage
    int height = 0; // height
    int bbp = 0; // bits per pixel

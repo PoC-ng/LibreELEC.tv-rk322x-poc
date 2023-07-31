@@ -57,7 +57,7 @@ index 398d455031989..6feebf96557e6 100644
 +#include "windowing/WinSystem.h"
  
  #include <stdio.h>
- 
+
 -CDirtyRegionTracker::CDirtyRegionTracker(int buffering)
 +CDirtyRegionTracker::CDirtyRegionTracker()
  {
