@@ -20,7 +20,7 @@
     SQUASHFS_COMPRESSION="lzo"
 
   # Additional kernel make parameters (for example to specify the u-boot loadaddress)
-    KERNEL_MAKE_EXTRACMD=" rk322x-box.dtb "
+    KERNEL_MAKE_EXTRACMD=" rk322x-box.dtb rk322x-box-t95d.dtb"
 
   # Mali GPU family
     MALI_FAMILY="400"
@@ -32,6 +32,6 @@
   # set the addon project
     ADDON_PROJECT="ARMv7"
 
-    ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware mpv-drmprime"
+    ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware openvfd-driver"
 
     IR_REMOTE_KEYMAPS=" tanix_tx5max x96max "

@@ -1,6 +1,28 @@
+diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts
+--- linux/arch/arm/boot/dts/rk322x-box-t95d.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-08-16 11:42:47.775391583 +0200
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++
++#include "rk322x-box.dtsi"
++#include "rk322x-cpu-opp.dtsi"
++#include "rk322x-legacy.dtsi"
++
++/ {
++	model = "RK3228 T95D box";
++	compatible = "rockchip,rk3228";
++
++	openvfd {
++		compatible = "open,vfd";
++		dev_name = "openvfd";
++		status = "okay";
++	};
++};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk322x-box.dts
 --- linux/arch/arm/boot/dts/rk322x-box.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dts	2023-03-24 10:46:33.872914838 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-box.dts	2023-08-16 11:43:44.426393955 +0200
 @@ -0,0 +1,12 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
@@ -16,8 +38,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/rk322x-box.dtsi
 --- linux/arch/arm/boot/dts/rk322x-box.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-07-24 09:24:22.341499061 +0200
-@@ -0,0 +1,406 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-08-02 17:34:25.125043689 +0200
+@@ -0,0 +1,428 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +#include <dt-bindings/input/input.h>
@@ -185,22 +207,26 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +
 +&cpu0 {
 +	cpu-supply = <&vdd_arm>;
++	clock-frequency = <1200000000>;
 +};
 +
 +&cpu1 {
 +	cpu-supply = <&vdd_arm>;
++	clock-frequency = <1200000000>;
 +};
 +
 +&cpu2 {
 +	cpu-supply = <&vdd_arm>;
++	clock-frequency = <1200000000>;
 +};
 +
 +&cpu3 {
 +	cpu-supply = <&vdd_arm>;
++	clock-frequency = <1200000000>;
 +};
 +
 +&cpu_alert0 {
-+	temperature = <90000>;
++	temperature = <85000>;
 +};
 +
 +&cpu_alert1 {
@@ -209,6 +235,24 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +
 +&cpu_crit {
 +	temperature = <105000>;
++};
++
++&cpu_thermal {
++	cooling-maps {
++		map0 {
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT 2>,
++				<&cpu1 THERMAL_NO_LIMIT 2>,
++				<&cpu2 THERMAL_NO_LIMIT 2>,
++				<&cpu3 THERMAL_NO_LIMIT 2>;
++		};
++		
++		map1 {
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT 4>,
++				<&cpu1 THERMAL_NO_LIMIT 4>,
++				<&cpu2 THERMAL_NO_LIMIT 4>,
++				<&cpu3 THERMAL_NO_LIMIT 4>;
++		};
++	};
 +};
 +
 +&cru {
@@ -426,7 +470,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi linux-new/arch/arm/boot/dts/rk322x-cpu-opp.dtsi
 --- linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-cpu-opp.dtsi	2023-07-27 19:14:20.136318486 +0200
++++ linux-new/arch/arm/boot/dts/rk322x-cpu-opp.dtsi	2023-08-02 08:39:07.296919612 +0200
 @@ -0,0 +1,116 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
@@ -439,14 +483,14 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi linux-new/arch/arm/boot/d
 +		nvmem-cells = <&cpu_leakage>;
 +		nvmem-cell-names = "cpu-leakage";
 +
-+		/*opp-408000000 {
++		opp-408000000 {
 +			opp-hz = /bits/ 64 <408000000>;
 +			opp-microvolt = <975000 975000 1275000>;
 +			opp-microvolt-L0 = <975000 975000 1275000>;
 +			opp-microvolt-L1 = <975000 975000 1275000>;
 +			clock-latency-ns = <40000>;
 +			opp-suspend;
-+		};*/
++		};
 +		opp-600000000 {
 +			opp-hz = /bits/ 64 <600000000>;
 +			opp-microvolt = <1000000 1000000 1275000>;
@@ -477,13 +521,13 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi linux-new/arch/arm/boot/d
 +			opp-microvolt-L0 = <1175000 1175000 1275000>;
 +			opp-microvolt-L1 = <1125000 1125000 1275000>;
 +		};
-+		opp-1296000000 {
++		/*opp-1296000000 {
 +			opp-hz = /bits/ 64 <1296000000>;
 +			opp-microvolt = <1225000 1225000 1275000>;
 +			opp-microvolt-L0 = <1225000 1225000 1275000>;
 +			opp-microvolt-L1 = <1175000 1175000 1275000>;
 +		};
-+		/*opp-1392000000 {
++		opp-1392000000 {
 +			opp-hz = /bits/ 64 <1392000000>;
 +			opp-microvolt = <1275000 1275000 1275000>;
 +			opp-microvolt-L0 = <1275000 1275000 1275000>;
@@ -523,10 +567,10 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi linux-new/arch/arm/boot/d
 +	gpu_opp_table: opp-table2 {
 +		compatible = "operating-points-v2";
 +
-+		/*opp-216000000 {
++		opp-216000000 {
 +			opp-hz = /bits/ 64 <216000000>;
 +			opp-microvolt = <1050000 1000000 1100000>;
-+		};*/
++		};
 +
 +		opp-312000000 {
 +			opp-hz = /bits/ 64 <312000000>;
@@ -538,15 +582,15 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi linux-new/arch/arm/boot/d
 +			opp-microvolt = <1100000 1000000 1100000>;
 +		};
 +		
-+		opp-500000000 {
++		/*opp-500000000 {
 +			opp-hz = /bits/ 64 <500000000>;
 +			opp-microvolt = <1100000 1000000 1100000>;
-+		};
++		};*/
 +	};
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-legacy.dtsi linux-new/arch/arm/boot/dts/rk322x-legacy.dtsi
 --- linux/arch/arm/boot/dts/rk322x-legacy.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-legacy.dtsi	2023-07-24 09:24:28.143499304 +0200
++++ linux-new/arch/arm/boot/dts/rk322x-legacy.dtsi	2023-08-10 18:16:45.656139768 +0200
 @@ -0,0 +1,47 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
