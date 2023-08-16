@@ -6,7 +6,7 @@ diff -ruPN xbmc-20.0-Nexus/xbmc/windowing/gbm/WinSystemGbmGLESContext.cpp xbmc-n
    else
    {
 -    KODI::TIME::Sleep(10ms);
-+    KODI::TIME::Sleep(30ms);
++    KODI::TIME::Sleep(40ms);
    }
  }
  
