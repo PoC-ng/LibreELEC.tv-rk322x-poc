@@ -32,6 +32,8 @@
   # set the addon project
     ADDON_PROJECT="ARMv7"
 
-    ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware openvfd-driver"
+    ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware openvfd-driver RTL8192FU "
+
+    WIRELESS_DAEMON="wpa_supplicant"
 
     IR_REMOTE_KEYMAPS=" tanix_tx5max x96max "
