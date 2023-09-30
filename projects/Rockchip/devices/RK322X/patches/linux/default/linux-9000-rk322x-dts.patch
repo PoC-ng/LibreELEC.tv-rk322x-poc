@@ -1,13 +1,13 @@
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts
 --- linux/arch/arm/boot/dts/rk322x-box-t95d.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-08-16 11:42:47.775391583 +0200
++++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-09-26 08:53:06.592016309 +0200
 @@ -0,0 +1,18 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
 +
 +#include "rk322x-box.dtsi"
-+#include "rk322x-cpu-opp.dtsi"
++#include "rk322x-opp.dtsi"
 +#include "rk322x-legacy.dtsi"
 +
 +/ {
@@ -22,24 +22,39 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/d
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk322x-box.dts
 --- linux/arch/arm/boot/dts/rk322x-box.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dts	2023-08-16 11:43:44.426393955 +0200
-@@ -0,0 +1,12 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box.dts	2023-09-28 18:23:46.729738223 +0200
+@@ -0,0 +1,27 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
 +
 +#include "rk322x-box.dtsi"
-+#include "rk322x-cpu-opp.dtsi"
++#include "rk322x-opp.dtsi"
 +#include "rk322x-legacy.dtsi"
 +
 +/ {
 +        model = "Generic rk322x tv box";
 +        compatible = "rockchip,rk3228";
++
++	leds {
++		compatible = "gpio-leds";
++
++		blue_led {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		red_led {
++                        gpios = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
++                        default-state = "off";
++                        enable-state-shutdown;
++                };
++	};
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/rk322x-box.dtsi
 --- linux/arch/arm/boot/dts/rk322x-box.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-08-02 17:34:25.125043689 +0200
-@@ -0,0 +1,428 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-09-28 08:14:42.979564041 +0200
+@@ -0,0 +1,419 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +#include <dt-bindings/input/input.h>
@@ -71,24 +86,16 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +
 +	ir_receiver: ir-receiver {
 +		compatible = "gpio-ir-receiver";
-+		gpios = <&gpio1 RK_PB3 GPIO_ACTIVE_LOW>;
++		gpio = <&gpio1 RK_PB3 GPIO_ACTIVE_LOW>;
 +		pinctrl-0 = <&ir_int>;
 +		pinctrl-names = "default";
++		wakeup-source;
 +		status = "okay";
 +	};
 +
 +	memory@60000000 {
 +		device_type = "memory";
 +		reg = <0x60000000 0x40000000>;
-+	};
-+
-+	power-led {
-+		compatible = "gpio-leds";
-+
-+		blue_led: led-0 {
-+			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
 +	};
 +
 +	sdio_pwrseq: sdio-pwrseq {
@@ -192,6 +199,17 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +		regulator-boot-on;
 +	};
 +
++	vdd_hdmi_phy: vdd-hdmi-phy-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "hack_to_enable_some_hdmi_connector";
++		gpio = <&gpio2 RK_PB3 GPIO_ACTIVE_LOW>;
++		pinctrl-0 = <&hdmi_phy_enable>;
++		pinctrl-names = "default";
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_sys>;
++	};
++
 +	vdd_log: vdd-log-regulator {
 +		compatible = "pwm-regulator";
 +		pwms = <&pwm2 0 25000 1>;
@@ -226,33 +244,15 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +};
 +
 +&cpu_alert0 {
-+	temperature = <85000>;
++	temperature = <80000>;
 +};
 +
 +&cpu_alert1 {
-+	temperature = <95000>;
++	temperature = <90000>;
 +};
 +
 +&cpu_crit {
 +	temperature = <105000>;
-+};
-+
-+&cpu_thermal {
-+	cooling-maps {
-+		map0 {
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT 2>,
-+				<&cpu1 THERMAL_NO_LIMIT 2>,
-+				<&cpu2 THERMAL_NO_LIMIT 2>,
-+				<&cpu3 THERMAL_NO_LIMIT 2>;
-+		};
-+		
-+		map1 {
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT 4>,
-+				<&cpu1 THERMAL_NO_LIMIT 4>,
-+				<&cpu2 THERMAL_NO_LIMIT 4>,
-+				<&cpu3 THERMAL_NO_LIMIT 4>;
-+		};
-+	};
 +};
 +
 +&cru {
@@ -345,9 +345,15 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +
 +&pinctrl {
 +
++	hdmi-phy {
++		hdmi_phy_enable: hdmi-phy-enable {
++			rockchip,pins = <2 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
 +	ir {
 +		ir_int: ir-int {
-+		rockchip,pins = <1 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <1 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
 +
@@ -468,129 +474,9 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +&vop_mmu {
 +	status = "okay";
 +};
-diff -ruPN linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi linux-new/arch/arm/boot/dts/rk322x-cpu-opp.dtsi
---- linux/arch/arm/boot/dts/rk322x-cpu-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-cpu-opp.dtsi	2023-08-02 08:39:07.296919612 +0200
-@@ -0,0 +1,116 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+/ {
-+	/delete-node/ opp-table-0;
-+
-+	cpu0_opp_table: opp-table-0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+		nvmem-cells = <&cpu_leakage>;
-+		nvmem-cell-names = "cpu-leakage";
-+
-+		opp-408000000 {
-+			opp-hz = /bits/ 64 <408000000>;
-+			opp-microvolt = <975000 975000 1275000>;
-+			opp-microvolt-L0 = <975000 975000 1275000>;
-+			opp-microvolt-L1 = <975000 975000 1275000>;
-+			clock-latency-ns = <40000>;
-+			opp-suspend;
-+		};
-+		opp-600000000 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <1000000 1000000 1275000>;
-+			opp-microvolt-L0 = <1000000 1000000 1275000>;
-+			opp-microvolt-L1 = <975000 975000 1275000>;
-+		};
-+		opp-816000000 {
-+			opp-hz = /bits/ 64 <816000000>;
-+			opp-microvolt = <1025000 1025000 1275000>;
-+			opp-microvolt-L0 = <1025000 1025000 1275000>;
-+			opp-microvolt-L1 = <1000000 1000000 1275000>;
-+		};
-+		opp-1008000000 {
-+			opp-hz = /bits/ 64 <1008000000>;
-+			opp-microvolt = <1075000 1075000 1275000>;
-+			opp-microvolt-L0 = <1075000 1075000 1275000>;
-+			opp-microvolt-L1 = <1025000 1025000 1275000>;
-+		};
-+		opp-1104000000 {
-+			opp-hz = /bits/ 64 <1104000000>;
-+			opp-microvolt = <1125000 1125000 1275000>;
-+			opp-microvolt-L0 = <1125000 1125000 1275000>;
-+			opp-microvolt-L1 = <1075000 1075000 1275000>;
-+		};
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1175000 1175000 1275000>;
-+			opp-microvolt-L0 = <1175000 1175000 1275000>;
-+			opp-microvolt-L1 = <1125000 1125000 1275000>;
-+		};
-+		/*opp-1296000000 {
-+			opp-hz = /bits/ 64 <1296000000>;
-+			opp-microvolt = <1225000 1225000 1275000>;
-+			opp-microvolt-L0 = <1225000 1225000 1275000>;
-+			opp-microvolt-L1 = <1175000 1175000 1275000>;
-+		};
-+		opp-1392000000 {
-+			opp-hz = /bits/ 64 <1392000000>;
-+			opp-microvolt = <1275000 1275000 1275000>;
-+			opp-microvolt-L0 = <1275000 1275000 1275000>;
-+			opp-microvolt-L1 = <1225000 1225000 1275000>;
-+			/*status = "disabled";
-+		};*/
-+	};
-+	
-+	/delete-node/ dmc-opp-table;
-+
-+	dmc_opp_table: dmc-opp-table {
-+		compatible = "operating-points-v2";
-+
-+		opp-330000000 {
-+			opp-hz = /bits/ 64 <330000000>;
-+			opp-microvolt = <1050000 1000000 1200000>;
-+		};
-+		opp-534000000 {
-+			opp-hz = /bits/ 64 <534000000>;
-+			opp-microvolt = <1050000 1000000 1200000>;
-+		};
-+		opp-660000000 {
-+			opp-hz = /bits/ 64 <660000000>;
-+			opp-microvolt = <1100000 1000000 1200000>;
-+			status = "disabled";
-+		};
-+		opp-786000000 {
-+			opp-hz = /bits/ 64 <786000000>;
-+			opp-microvolt = <1100000 1000000 1200000>;
-+			status = "disabled";
-+		};
-+
-+	};
-+
-+	/delete-node/ opp-table2;
-+
-+	gpu_opp_table: opp-table2 {
-+		compatible = "operating-points-v2";
-+
-+		opp-216000000 {
-+			opp-hz = /bits/ 64 <216000000>;
-+			opp-microvolt = <1050000 1000000 1100000>;
-+		};
-+
-+		opp-312000000 {
-+			opp-hz = /bits/ 64 <312000000>;
-+			opp-microvolt = <1050000 1000000 1100000>;
-+		};
-+		
-+		opp-408000000 {
-+			opp-hz = /bits/ 64 <408000000>;
-+			opp-microvolt = <1100000 1000000 1100000>;
-+		};
-+		
-+		/*opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <1100000 1000000 1100000>;
-+		};*/
-+	};
-+};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-legacy.dtsi linux-new/arch/arm/boot/dts/rk322x-legacy.dtsi
 --- linux/arch/arm/boot/dts/rk322x-legacy.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-legacy.dtsi	2023-08-10 18:16:45.656139768 +0200
++++ linux-new/arch/arm/boot/dts/rk322x-legacy.dtsi	2023-09-22 15:21:57.369151855 +0200
 @@ -0,0 +1,47 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
@@ -639,3 +525,159 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-legacy.dtsi linux-new/arch/arm/boot/dt
 +/*&nandc {
 +	status = "okay";
 +};*/
+diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/rk322x-opp.dtsi
+--- linux/arch/arm/boot/dts/rk322x-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2023-09-28 08:12:26.494558327 +0200
+@@ -0,0 +1,152 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/ {
++	/delete-node/ opp-table-0;
++
++	cpu0_opp_table: opp-table-0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++		nvmem-cells = <&cpu_leakage>;
++		nvmem-cell-names = "cpu-leakage";
++
++		opp-408000000 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <975000 975000 1275000>;
++			opp-microvolt-L0 = <975000 975000 1275000>;
++			opp-microvolt-L1 = <975000 975000 1275000>;
++			clock-latency-ns = <40000>;
++			opp-suspend;
++		};
++		opp-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1000000 1000000 1275000>;
++			opp-microvolt-L0 = <1000000 1000000 1275000>;
++			opp-microvolt-L1 = <975000 975000 1275000>;
++		};
++		opp-816000000 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <1025000 1025000 1275000>;
++			opp-microvolt-L0 = <1025000 1025000 1275000>;
++			opp-microvolt-L1 = <1000000 1000000 1275000>;
++		};
++		opp-1008000000 {
++			opp-hz = /bits/ 64 <1008000000>;
++			opp-microvolt = <1075000 1075000 1275000>;
++			opp-microvolt-L0 = <1075000 1075000 1275000>;
++			opp-microvolt-L1 = <1025000 1025000 1275000>;
++		};
++		opp-1104000000 {
++			opp-hz = /bits/ 64 <1104000000>;
++			opp-microvolt = <1125000 1125000 1275000>;
++			opp-microvolt-L0 = <1125000 1125000 1275000>;
++			opp-microvolt-L1 = <1075000 1075000 1275000>;
++			status = "disabled";
++		};
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1175000 1175000 1275000>;
++			opp-microvolt-L0 = <1175000 1175000 1275000>;
++			opp-microvolt-L1 = <1125000 1125000 1275000>;
++			status = "disabled";
++		};
++		opp-1296000000 {
++			opp-hz = /bits/ 64 <1296000000>;
++			opp-microvolt = <1225000 1225000 1275000>;
++			opp-microvolt-L0 = <1225000 1225000 1275000>;
++			opp-microvolt-L1 = <1175000 1175000 1275000>;
++			status = "disabled";
++		};
++		opp-1392000000 {
++			opp-hz = /bits/ 64 <1392000000>;
++			opp-microvolt = <1275000 1275000 1275000>;
++			opp-microvolt-L0 = <1275000 1275000 1275000>;
++			opp-microvolt-L1 = <1225000 1225000 1275000>;
++			status = "disabled";
++		};
++	};
++	
++	/delete-node/ dmc-opp-table;
++
++	dmc_opp_table: dmc-opp-table {
++		compatible = "operating-points-v2";
++
++		opp-330000000 {
++			opp-hz = /bits/ 64 <330000000>;
++			opp-microvolt = <1050000 1000000 1200000>;
++		};
++		opp-534000000 {
++			opp-hz = /bits/ 64 <534000000>;
++			opp-microvolt = <1050000 1000000 1200000>;
++		};
++		opp-660000000 {
++			opp-hz = /bits/ 64 <660000000>;
++			opp-microvolt = <1100000 1000000 1200000>;
++			status = "disabled";
++		};
++		opp-786000000 {
++			opp-hz = /bits/ 64 <786000000>;
++			opp-microvolt = <1100000 1000000 1200000>;
++			status = "disabled";
++		};
++
++	};
++
++	/delete-node/ opp-table2;
++
++	gpu_opp_table: opp-table2 {
++		compatible = "operating-points-v2";
++
++		opp-216000000 {
++			opp-hz = /bits/ 64 <216000000>;
++			opp-microvolt = <1050000 1000000 1100000>;
++		};
++
++		opp-312000000 {
++			opp-hz = /bits/ 64 <312000000>;
++			opp-microvolt = <1050000 1000000 1100000>;
++		};
++		
++		opp-408000000 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <1100000 1000000 1100000>;
++		};
++		
++		opp-500000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			opp-microvolt = <1100000 1000000 1100000>;
++			status = "disabled";
++		};
++	};
++};
++
++&cpu_thermal {
++	cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT 2>,
++				<&cpu1 THERMAL_NO_LIMIT 2>,
++				<&cpu2 THERMAL_NO_LIMIT 2>,
++				<&cpu3 THERMAL_NO_LIMIT 2>;
++		};
++
++		map1 {
++			trip = <&cpu_alert1>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT 3>,
++				<&cpu1 THERMAL_NO_LIMIT 3>,
++				<&cpu2 THERMAL_NO_LIMIT 3>,
++				<&cpu3 THERMAL_NO_LIMIT 3>;
++		};
++
++		map2 {
++			trip = <&cpu_alert1>;
++			cooling-device =
++			<&gpu THERMAL_NO_LIMIT 1>;
++		};
++		
++		map3 {
++			trip = <&cpu_alert1>;
++			cooling-device =
++			<&dmc THERMAL_NO_LIMIT 1>;
++		};
++	};
++};
