@@ -36,4 +36,4 @@
 
     WIRELESS_DAEMON="wpa_supplicant"
 
-    IR_REMOTE_KEYMAPS=" tanix_tx5max x96max "
+    IR_REMOTE_KEYMAPS=" rockchip_remote "
