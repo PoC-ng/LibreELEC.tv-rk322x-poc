@@ -30,6 +30,12 @@ PKG_MESON_OPTS_TARGET="-Dgallium-drivers=${GALLIUM_DRIVERS// /,} \
                        -Dselinux=false \
                        -Dosmesa=false"
 
+if [ "${DEVICE}" = "RPi5" ]; then
+  PKG_MESON_OPTS_TARGET+=" -Ddraw-use-llvm=false"
+else
+  PKG_MESON_OPTS_TARGET+=" -Ddri-drivers="
+fi
+
 if [ "${DISPLAYSERVER}" = "x11" ]; then
   PKG_DEPENDS_TARGET+=" xorgproto libXext libXdamage libXfixes libXxf86vm libxcb libX11 libxshmfence libXrandr"
   export X11_INCLUDES=
