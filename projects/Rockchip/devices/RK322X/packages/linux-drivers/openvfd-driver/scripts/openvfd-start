@@ -7,8 +7,8 @@ PROC_DT="/proc/device-tree"
 DT_ID=$(dtname)
 
 case $DT_ID in
-  *odroid_hc4*)
-    SYSCONFFILE="$SYSCONFDIR/hc4.conf"
+  *t95d*)
+    SYSCONFFILE="$SYSCONFDIR/t95d.conf"
     ;;
 esac
 
