@@ -634,8 +634,8 @@ index 00000000000..e8106f36404
 +	rk3228_devfreq_profile.initial_freq = cur_freq;
 +	dev_pm_opp_put(opp);
 +
-+	rdev->ondemand_data.upthreshold = 70;
-+	rdev->ondemand_data.downdifferential = 5;
++	rdev->ondemand_data.upthreshold = 15;
++	rdev->ondemand_data.downdifferential = 10;
 +
 +	devfreq = devm_devfreq_add_device(dev, &rk3228_devfreq_profile,
 +					  DEVFREQ_GOV_SIMPLE_ONDEMAND, &rdev->ondemand_data);
