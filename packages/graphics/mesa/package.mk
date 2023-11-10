@@ -32,8 +32,8 @@ PKG_MESON_OPTS_TARGET="-Dgallium-drivers=${GALLIUM_DRIVERS// /,} \
 
 if [ "${DEVICE}" = "RPi5" ]; then
   PKG_MESON_OPTS_TARGET+=" -Ddraw-use-llvm=false"
-else
-  PKG_MESON_OPTS_TARGET+=" -Ddri-drivers="
+#else
+#  PKG_MESON_OPTS_TARGET+=" -Ddri-drivers="
 fi
 
 if [ "${DISPLAYSERVER}" = "x11" ]; then
