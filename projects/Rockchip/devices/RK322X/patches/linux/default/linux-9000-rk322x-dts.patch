@@ -111,8 +111,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-onetv-lite.dts linux-new/arch/arm/
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts
 --- linux/arch/arm/boot/dts/rk322x-box-t95d.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-10-15 08:24:41.345075662 +0200
-@@ -0,0 +1,22 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-11-03 16:50:53.300158215 +0100
+@@ -0,0 +1,46 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
@@ -125,6 +125,21 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/d
 +	model = "RK3228 T95D box";
 +	compatible = "rockchip,rk322x-box-t95d";
 +
++	leds {
++		compatible = "gpio-leds";
++
++		blue_led {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++		
++		red_led {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++			enable-state-shutdown;
++		};
++	};
++	
 +	openvfd {
 +		compatible = "open,vfd";
 +		dev_name = "openvfd";
@@ -134,6 +149,15 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/d
 +
 +&dmc {
 +	status = "okay";
++};
++
++&dram_timing {
++                ddr3_drv = <DDR3_DS_34ohm>;
++                ddr3_odt = <DDR3_ODT_120ohm>;
++                phy_ddr3_clk_drv = <PHY_DDR3_RON_RTT_34ohm>;
++                phy_ddr3_cmd_drv = <PHY_DDR3_RON_RTT_34ohm>;
++                phy_ddr3_dqs_drv = <PHY_DDR3_RON_RTT_34ohm>;
++                phy_ddr3_odt = <PHY_DDR3_RON_RTT_225ohm>;
 +};
 \ Manca newline alla fine del file
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v884k.dts linux-new/arch/arm/boot/dts/rk322x-box-v884k.dts
@@ -266,8 +290,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/rk322x-box.dtsi
 --- linux/arch/arm/boot/dts/rk322x-box.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-10-16 19:12:38.617005551 +0200
-@@ -0,0 +1,438 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-11-03 14:08:54.561638486 +0100
+@@ -0,0 +1,440 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +#include <dt-bindings/input/input.h>
@@ -610,6 +634,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +&sdmmc {
 +	cap-sd-highspeed;
 +	status = "okay";
++	cd-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_LOW>;
++	cd-debounce-delay-ms = <500>;
 +};
 +
 +&spdif {
