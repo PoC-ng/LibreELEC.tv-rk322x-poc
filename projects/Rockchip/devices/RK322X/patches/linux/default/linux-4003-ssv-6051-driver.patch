@@ -1777,7 +1777,7 @@ index 000000000000..273777cd0485
 +#include <linux/skbuff.h>
 +
 +#define LOW_SPEED_SDIO_CLOCK (25000000)
-+#define HIGH_SPEED_SDIO_CLOCK (37500000)
++#define HIGH_SPEED_SDIO_CLOCK (45000000)
 +#define MAX_RX_FRAME_SIZE 0x900
 +#define SSV_VENDOR_ID 0x3030
 +#define SSV_CABRIO_DEVID 0x3030
@@ -32277,7 +32277,7 @@ index 000000000000..b1b6f0510d28
 +
 +#######################################################
 +ccflags-y += -DCONFIG_SSV6200_HAS_RX_WORKQUEUE
-+#ccflags-y += -DUSE_THREAD_RX
++ccflags-y += -DUSE_THREAD_RX -DPREFER_RX
 +ccflags-y += -DUSE_THREAD_TX
 +ccflags-y += -DENABLE_AGGREGATE_IN_TIME
 +ccflags-y += -DENABLE_INCREMENTAL_AGGREGATION
