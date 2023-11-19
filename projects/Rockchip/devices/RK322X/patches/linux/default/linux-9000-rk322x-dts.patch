@@ -111,8 +111,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-onetv-lite.dts linux-new/arch/arm/
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts
 --- linux/arch/arm/boot/dts/rk322x-box-t95d.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-11-03 16:50:53.300158215 +0100
-@@ -0,0 +1,46 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-11-19 14:59:26.635103011 +0100
+@@ -0,0 +1,52 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
@@ -158,6 +158,12 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/d
 +                phy_ddr3_cmd_drv = <PHY_DDR3_RON_RTT_34ohm>;
 +                phy_ddr3_dqs_drv = <PHY_DDR3_RON_RTT_34ohm>;
 +                phy_ddr3_odt = <PHY_DDR3_RON_RTT_225ohm>;
++};
++
++&uart1 {
++		bluetooth {
++			compatible = "brcm,bcm4345c5";
++		};
 +};
 \ Manca newline alla fine del file
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v884k.dts linux-new/arch/arm/boot/dts/rk322x-box-v884k.dts
@@ -290,8 +296,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/rk322x-box.dtsi
 --- linux/arch/arm/boot/dts/rk322x-box.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-11-03 14:08:54.561638486 +0100
-@@ -0,0 +1,440 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-11-19 09:51:01.420513943 +0100
+@@ -0,0 +1,452 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +#include <dt-bindings/input/input.h>
@@ -342,10 +348,10 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +
 +	sdio_pwrseq: sdio-pwrseq {
 +		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_enable_h>;
-+		reset-gpios = <&gpio2 26 GPIO_ACTIVE_LOW>,
-+			      <&gpio2 29 GPIO_ACTIVE_LOW>;
++		/*pinctrl-names = "default";
++		pinctrl-0 = <&wifi_enable_h>;*/
++		reset-gpios = <&gpio2 RK_PD2 GPIO_ACTIVE_LOW>,
++			      <&gpio2 RK_PD5 GPIO_ACTIVE_LOW>;
 +	};
 +
 +	spdif_out: spdif-out {
@@ -486,11 +492,11 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +};
 +
 +&cpu_alert0 {
-+	temperature = <80000>;
++	temperature = <85000>;
 +};
 +
 +&cpu_alert1 {
-+	temperature = <90000>;
++	temperature = <95000>;
 +};
 +
 +&cpu_crit {
@@ -692,6 +698,18 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +	};
 +};
 +
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart11_xfer &uart11_rts &uart11_cts>;
++	uart-has-rtscts;
++	status = "okay";
++	bluetooth {
++		enable-gpios = <&gpio2 RK_PD5 GPIO_ACTIVE_HIGH>;
++		device-wake-gpios = <&gpio3 RK_PD3 GPIO_ACTIVE_HIGH>;
++		host-wake-gpios = <&gpio3 RK_PD2 GPIO_ACTIVE_HIGH>;
++	};
++};
++
 +&uart2 {
 +	status = "okay";
 +};
@@ -785,7 +803,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-legacy.dtsi linux-new/arch/arm/boot/dt
 +};*/
 diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/rk322x-opp.dtsi
 --- linux/arch/arm/boot/dts/rk322x-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2023-09-28 08:12:26.494558327 +0200
++++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2023-11-18 09:24:01.307829097 +0100
 @@ -0,0 +1,152 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
@@ -920,22 +938,22 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/r
 +
 +		map1 {
 +			trip = <&cpu_alert1>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT 3>,
-+				<&cpu1 THERMAL_NO_LIMIT 3>,
-+				<&cpu2 THERMAL_NO_LIMIT 3>,
-+				<&cpu3 THERMAL_NO_LIMIT 3>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT 4>,
++				<&cpu1 THERMAL_NO_LIMIT 4>,
++				<&cpu2 THERMAL_NO_LIMIT 4>,
++				<&cpu3 THERMAL_NO_LIMIT 4>;
 +		};
 +
 +		map2 {
 +			trip = <&cpu_alert1>;
 +			cooling-device =
-+			<&gpu THERMAL_NO_LIMIT 1>;
++			<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};
 +		
 +		map3 {
 +			trip = <&cpu_alert1>;
 +			cooling-device =
-+			<&dmc THERMAL_NO_LIMIT 1>;
++			<&dmc THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};
 +	};
 +};
