@@ -23,6 +23,7 @@
     KERNEL_MAKE_EXTRACMD=" rk322x-box.dtb \
 	rk322x-box-t95d.dtb \
 	rk322x-box-onetv-lite.dtb \
+	rk322x-box-mxq4k.dtb \
 	rk322x-box-mxq4kpro.dtb \
 	rk322x-box-v884k.dtb \
 	rk322x-box-v88mars.dtb"
