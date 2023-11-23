@@ -169,11 +169,11 @@ diff -ruPN u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/arch/arm/dts/rk322x-b
 +
 +&pinctrl {
 +
-+	gpio {
++	/*gpio {
 +		gpio_leds: gpio-leds {
 +			rockchip,pins = <3 21 RK_FUNC_GPIO &pcfg_pull_down>;
 +		};
-+	};
++	};*/
 +
 +	usb {
 +		otg_vbus_drv: otg-vbus-drv {
