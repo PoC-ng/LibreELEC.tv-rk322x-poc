@@ -9,7 +9,7 @@ PKG_LICENSE="Apache-2.0"
 PKG_SITE="https://www.openssl.org"
 PKG_URL="https://www.openssl.org/source/${PKG_NAME}-${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_HOST="ccache:host"
-PKG_DEPENDS_TARGET="toolchain"
+PKG_DEPENDS_TARGET="toolchain cryptodev-linux"
 PKG_LONGDESC="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security"
 PKG_TOOLCHAIN="configure"
 
@@ -32,7 +32,8 @@ PKG_CONFIGURE_OPTS_SHARED="--libdir=lib \
 PKG_CONFIGURE_OPTS_HOST="--prefix=${TOOLCHAIN} \
                          --openssldir=${TOOLCHAIN}/etc/ssl"
 PKG_CONFIGURE_OPTS_TARGET="--prefix=/usr \
-                           --openssldir=/etc/ssl"
+                           --openssldir=/etc/ssl \
+                           enable-devcryptoeng"
 
 post_unpack() {
   find ${PKG_BUILD}/apps -type f | xargs -n 1 -t sed 's|./demoCA|/etc/ssl|' -i
