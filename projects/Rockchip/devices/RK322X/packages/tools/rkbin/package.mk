@@ -1,11 +1,11 @@
-# SPDX-License-Identifier: GPL-2.0
+# SPDX-License-Identifier: GPL-2.
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="rkbin"
 
 # Version is: knaerzche/tag:libreelec-991d0e4
-PKG_VERSION="2944cf0fdd25cc16afefc83d629e9b6fb4874ccd"
-PKG_SHA256="db5cc855e124d2ea5c06ca9818ab7b7cb81cc3fad131126d4ca6ba70f60b4a11"
+PKG_VERSION="901966e99796e4533f35af6d896d20946098cc6e"
+PKG_SHA256="9007c17ef3b28a33667c4a782db9699402d391c5236db6f5f29e0505330457d1"
 PKG_ARCH="arm aarch64"
 PKG_LICENSE="nonfree"
 PKG_SITE="https://github.com/rockchip-linux/rkbin"
