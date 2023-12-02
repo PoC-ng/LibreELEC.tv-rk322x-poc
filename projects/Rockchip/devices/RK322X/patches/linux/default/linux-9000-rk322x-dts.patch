@@ -1,7 +1,7 @@
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4k.dts linux-new/arch/arm/boot/dts/rk322x-box-mxq4k.dts
 --- linux/arch/arm/boot/dts/rk322x-box-mxq4k.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-mxq4k.dts	2023-11-23 19:32:16.382154102 +0100
-@@ -0,0 +1,56 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box-mxq4k.dts	2023-12-02 07:39:03.423335548 +0100
+@@ -0,0 +1,60 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
@@ -11,7 +11,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4k.dts linux-new/arch/arm/boot/
 +
 +/ {
 +	model = "RK3228 MXQ4K";
-+	compatible = "rockchip,rk322x-box-mxq4k";
++	compatible = "rockchip,rk322x-box-mxq4k", "rockchip,rk3229";
 +
 +	leds {
 +		compatible = "gpio-leds";
@@ -25,6 +25,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4k.dts linux-new/arch/arm/boot/
 +			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
 +			default-state = "off";
 +                        enable-state-shutdown;
++                        linux,default-trigger = "rc-feedback";
 +		};
 +	};
 +};
@@ -39,13 +40,16 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4k.dts linux-new/arch/arm/boot/
 +		status = "okay";
 +	};
 +
-+	opp-1296000000 {
-+		status = "okay";
-+	};
 +};
 +
 +&dmc {
 +	status = "okay";
++};
++
++&dmc_opp_table {
++	opp-656000000 {
++		status = "okay";
++	};
 +};
 +
 +&i2s1_bus {
@@ -58,10 +62,46 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4k.dts linux-new/arch/arm/boot/
 +			<1 RK_PA4 2 &pcfg_pull_none>,
 +			<1 RK_PA5 2 &pcfg_pull_none>;
 +};
+diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4k_r29.dts linux-new/arch/arm/boot/dts/rk322x-box-mxq4k_r29.dts
+--- linux/arch/arm/boot/dts/rk322x-box-mxq4k_r29.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-box-mxq4k_r29.dts	2023-12-02 08:55:47.330528284 +0100
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++
++#include "rk322x-box.dtsi"
++#include "rk322x-opp.dtsi"
++#include "rk322x-legacy.dtsi"
++
++/ {
++	model = "RK3228 mxq4k box r29 variant";
++	compatible = "rockchip,rk322x-box-mxq4k_r29", "rockchip,rk3228";
++
++	leds {
++		compatible = "gpio-leds";
++
++		blue_led {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++		
++		red_led {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++			enable-state-shutdown;
++			linux,default-trigger = "rc-feedback";
++		};
++	};
++};
++
++&dmc {
++	status = "okay";
++};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4kpro.dts linux-new/arch/arm/boot/dts/rk322x-box-mxq4kpro.dts
 --- linux/arch/arm/boot/dts/rk322x-box-mxq4kpro.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-mxq4kpro.dts	2023-11-23 11:36:21.409336517 +0100
-@@ -0,0 +1,47 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box-mxq4kpro.dts	2023-12-02 07:39:23.903336405 +0100
+@@ -0,0 +1,49 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
@@ -71,7 +111,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4kpro.dts linux-new/arch/arm/bo
 +
 +/ {
 +	model = "RK3228 MXQ4kpro box";
-+	compatible = "rockchip,rk322x-box-mxq4kpro";
++	compatible = "rockchip,rk322x-box-mxq4kpro", "rockchip,rk3228";
 +
 +	leds {
 +		compatible = "gpio-leds";
@@ -85,6 +125,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4kpro.dts linux-new/arch/arm/bo
 +			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_LOW>;
 +			default-state = "off";
 +			enable-state-shutdown;
++			linux,default-trigger = "rc-feedback";
 +		};
 +	};
 +};
@@ -99,20 +140,75 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4kpro.dts linux-new/arch/arm/bo
 +		status = "okay";
 +	};
 +
-+	opp-1296000000 {
-+		status = "okay";
-+	};
 +};
 +
 +&dmc {
 +	status = "okay";
 +};
 +
++&dmc_opp_table {
++	opp-656000000 {
++		status = "okay";
++	};
++};
+\ Manca newline alla fine del file
+diff -ruPN linux/arch/arm/boot/dts/rk322x-box-mxq4kpro_r329q.dts linux-new/arch/arm/boot/dts/rk322x-box-mxq4kpro_r329q.dts
+--- linux/arch/arm/boot/dts/rk322x-box-mxq4kpro_r329q.dts	1970-01-01 01:00:00.000000000 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-box-mxq4kpro_r329q.dts	2023-12-02 07:39:38.178337003 +0100
+@@ -0,0 +1,49 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
++/dts-v1/;
++#include "rk322x-box.dtsi"
++#include "rk322x-opp.dtsi"
++#include "rk322x-legacy.dtsi"
++
++/ {
++	model = "RK3228 MXQ4K with R329q board";
++	compatible = "rockchip,rk322x-box-mxq4k_r329q", "rockchip,rk3228";
++
++	leds {
++		compatible = "gpio-leds";
++
++		blue_led {
++			gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_LOW>;
++			default-state = "on";
++		};
++		
++		red_led {
++			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++			linux,default-trigger = "rc-feedback";
++                        enable-state-shutdown;
++		};
++	};
++};
++
++&cpu0_opp_table {
++
++	opp-1104000000 {
++		status = "okay";
++	};
++
++	opp-1200000000 {
++		status = "okay";
++	};
++
++};
++
++&dmc {
++	status = "okay";
++};
++
++&dmc_opp_table {
++	opp-656000000 {
++		status = "okay";
++	};
++};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-onetv-lite.dts linux-new/arch/arm/boot/dts/rk322x-box-onetv-lite.dts
 --- linux/arch/arm/boot/dts/rk322x-box-onetv-lite.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-onetv-lite.dts	2023-10-20 16:40:26.570941842 +0200
-@@ -0,0 +1,53 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box-onetv-lite.dts	2023-12-02 07:39:50.921337536 +0100
+@@ -0,0 +1,45 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
@@ -123,7 +219,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-onetv-lite.dts linux-new/arch/arm/
 +
 +/ {
 +	model = "RK3228 OneTv Lite";
-+	compatible = "rockchip,rk322x-box-onetv-lite";
++	compatible = "rockchip,rk322x-box-onetv-lite", "rockchip,rk3228";
 +
 +	leds {
 +		compatible = "gpio-leds";
@@ -137,27 +233,19 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-onetv-lite.dts linux-new/arch/arm/
 +                        gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_LOW>;
 +                        default-state = "off";
 +                        enable-state-shutdown;
++                        linux,default-trigger = "rc-feedback";
 +                };
-+	};
-+};
-+
-+&cpu0_opp_table {
-+
-+	opp-1104000000 {
-+		status = "okay";
-+	};
-+
-+	opp-1200000000 {
-+		status = "okay";
-+	};
-+
-+	opp-1296000000 {
-+		status = "okay";
 +	};
 +};
 +
 +&dmc {
 +	status = "okay";
++};
++
++&dmc_opp_table {
++        opp-656000000 {
++                status = "okay";
++        };
 +};
 +
 +&dram_timing {
@@ -168,8 +256,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-onetv-lite.dts linux-new/arch/arm/
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts
 --- linux/arch/arm/boot/dts/rk322x-box-t95d.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-11-19 14:59:26.635103011 +0100
-@@ -0,0 +1,52 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box-t95d.dts	2023-12-02 07:40:03.176338049 +0100
+@@ -0,0 +1,55 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
@@ -180,7 +268,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/d
 +
 +/ {
 +	model = "RK3228 T95D box";
-+	compatible = "rockchip,rk322x-box-t95d";
++	compatible = "rockchip,rk322x-box-t95d", "rockchip,rk3228";
 +
 +	leds {
 +		compatible = "gpio-leds";
@@ -194,6 +282,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/d
 +			gpios = <&gpio1 RK_PA7 GPIO_ACTIVE_HIGH>;
 +			default-state = "off";
 +			enable-state-shutdown;
++			linux,default-trigger = "rc-feedback";
 +		};
 +	};
 +	
@@ -209,24 +298,26 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-t95d.dts linux-new/arch/arm/boot/d
 +};
 +
 +&dram_timing {
-+                ddr3_drv = <DDR3_DS_34ohm>;
-+                ddr3_odt = <DDR3_ODT_120ohm>;
-+                phy_ddr3_clk_drv = <PHY_DDR3_RON_RTT_34ohm>;
-+                phy_ddr3_cmd_drv = <PHY_DDR3_RON_RTT_34ohm>;
-+                phy_ddr3_dqs_drv = <PHY_DDR3_RON_RTT_34ohm>;
-+                phy_ddr3_odt = <PHY_DDR3_RON_RTT_225ohm>;
++	sr_idle = <24>;
++	pd_idle = <32>;
++	ddr3_drv = <DDR3_DS_34ohm>;
++	ddr3_odt = <DDR3_ODT_120ohm>;
++	phy_ddr3_clk_drv = <PHY_DDR3_RON_RTT_34ohm>;
++	phy_ddr3_cmd_drv = <PHY_DDR3_RON_RTT_34ohm>;
++	phy_ddr3_dqs_drv = <PHY_DDR3_RON_RTT_34ohm>;
++	phy_ddr3_odt = <PHY_DDR3_RON_RTT_225ohm>;
 +};
 +
 +&uart1 {
-+		bluetooth {
-+			compatible = "brcm,bcm4345c5";
-+		};
++	bluetooth {
++		compatible = "brcm,bcm4345c5";
++	};
 +};
 \ Manca newline alla fine del file
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v884k.dts linux-new/arch/arm/boot/dts/rk322x-box-v884k.dts
 --- linux/arch/arm/boot/dts/rk322x-box-v884k.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-v884k.dts	2023-11-23 11:36:06.388335888 +0100
-@@ -0,0 +1,39 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box-v884k.dts	2023-12-02 07:40:25.720338993 +0100
+@@ -0,0 +1,42 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
@@ -236,7 +327,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v884k.dts linux-new/arch/arm/boot/
 +
 +/ {
 +	model = "RK3228 V884K";
-+	compatible = "rockchip,rk322x-box-v884k";
++	compatible = "rockchip,rk322x-box-v884k", "rockchip,rk3229";
 +
 +	leds {
 +		compatible = "gpio-leds";
@@ -258,18 +349,22 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v884k.dts linux-new/arch/arm/boot/
 +		status = "okay";
 +	};
 +
-+	opp-1296000000 {
-+		status = "okay";
-+	};
 +};
 +
 +&dmc {
 +	status = "okay";
 +};
++
++&dmc_opp_table {
++	opp-656000000 {
++		status = "okay";
++	};
++};
+\ Manca newline alla fine del file
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v88mars.dts linux-new/arch/arm/boot/dts/rk322x-box-v88mars.dts
 --- linux/arch/arm/boot/dts/rk322x-box-v88mars.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box-v88mars.dts	2023-11-23 11:35:59.266335590 +0100
-@@ -0,0 +1,41 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box-v88mars.dts	2023-12-02 07:40:14.805338536 +0100
+@@ -0,0 +1,51 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/dts-v1/;
@@ -279,7 +374,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v88mars.dts linux-new/arch/arm/boo
 +
 +/ {
 +	model = "RK3228 V88Mars";
-+	compatible = "rockchip,rk322x-box-v88mars";	
++	compatible = "rockchip,rk322x-box-v88mars", "rockchip,rk3228";
 +
 +	leds {
 +		compatible = "gpio-leds";
@@ -293,12 +388,12 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v88mars.dts linux-new/arch/arm/boo
 +			gpios = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
 +			default-state = "off";
 +			enable-state-shutdown;
++			linux,default-trigger = "rc-feedback";
 +		};
 +	};
 +};
 +
 +&cpu0_opp_table {
-+
 +	opp-1104000000 {
 +		status = "okay";
 +	};
@@ -310,10 +405,21 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box-v88mars.dts linux-new/arch/arm/boo
 +	opp-1296000000 {
 +		status = "okay";
 +	};
++	
++	opp-1392000000 {
++		status = "okay";
++	};
 +};
++
++&gpu_opp_table {
++	opp-500000000 {
++		status = "okay";
++	};
++};
+\ Manca newline alla fine del file
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk322x-box.dts
 --- linux/arch/arm/boot/dts/rk322x-box.dts	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dts	2023-11-23 13:25:07.085231875 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-box.dts	2023-12-01 09:45:49.822036958 +0100
 @@ -0,0 +1,28 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
@@ -325,7 +431,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk
 +
 +/ {
 +        model = "Generic rk322x tv box";
-+        compatible = "rockchip,rk322x-box";
++        compatible = "rockchip,rk3228", "rockchip,rk322x-box";
 +/*
 +	leds {
 +		compatible = "gpio-leds";
@@ -345,8 +451,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/rk322x-box.dtsi
 --- linux/arch/arm/boot/dts/rk322x-box.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-11-23 11:36:39.038337255 +0100
-@@ -0,0 +1,453 @@
++++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-12-01 14:36:45.941767735 +0100
+@@ -0,0 +1,460 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +#include <dt-bindings/input/input.h>
@@ -399,6 +505,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +		compatible = "mmc-pwrseq-simple";
 +		/*pinctrl-names = "default";
 +		pinctrl-0 = <&wifi_enable_h>;*/
++		post-power-on-delay-ms = <100>;
++		power-off-delay-us = <100000>;
 +		reset-gpios = <&gpio2 RK_PD2 GPIO_ACTIVE_LOW>,
 +			      <&gpio2 RK_PD5 GPIO_ACTIVE_LOW>,
 +			      <&gpio2 RK_PD3 GPIO_ACTIVE_LOW>;
@@ -560,7 +668,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +		<&cru ACLK_CPU>, <&cru HCLK_CPU>,
 +		<&cru PCLK_CPU>, <&cru ACLK_VOP>;
 +
-+    assigned-clock-rates = <1200000000>, <816000000>,
++    assigned-clock-rates = <1200000000>, <600000000>,
 +			    <500000000>, <150000000>,
 +			    <150000000>, <75000000>,
 +			    <150000000>, <150000000>,
@@ -793,6 +901,11 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +	status = "okay";
 +};
 +
++&vdec {
++	assigned-clocks = <&cru ACLK_RKVDEC>, <&cru SCLK_VDEC_CABAC>, <&cru SCLK_VDEC_CORE>;
++	assigned-clock-rates = <300000000>, <300000000>, <300000000>;
++};
++
 +&vop {
 +	status = "okay";
 +};
@@ -853,8 +966,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-legacy.dtsi linux-new/arch/arm/boot/dt
 +};*/
 diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/rk322x-opp.dtsi
 --- linux/arch/arm/boot/dts/rk322x-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2023-11-18 09:24:01.307829097 +0100
-@@ -0,0 +1,152 @@
++++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2023-12-01 14:19:09.637723514 +0100
+@@ -0,0 +1,157 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
 +/ {
@@ -871,11 +984,16 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/r
 +			opp-microvolt = <975000 975000 1275000>;
 +			opp-microvolt-L0 = <975000 975000 1275000>;
 +			opp-microvolt-L1 = <975000 975000 1275000>;
-+			clock-latency-ns = <40000>;
 +			opp-suspend;
 +		};
 +		opp-600000000 {
 +			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1000000 1000000 1275000>;
++			opp-microvolt-L0 = <1000000 1000000 1275000>;
++			opp-microvolt-L1 = <975000 975000 1275000>;
++		};
++		opp-696000000 {
++			opp-hz = /bits/ 64 <696000000>;
 +			opp-microvolt = <1000000 1000000 1275000>;
 +			opp-microvolt-L0 = <1000000 1000000 1275000>;
 +			opp-microvolt-L1 = <975000 975000 1275000>;
@@ -929,20 +1047,20 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/r
 +
 +		opp-330000000 {
 +			opp-hz = /bits/ 64 <330000000>;
-+			opp-microvolt = <1050000 1000000 1200000>;
++			opp-microvolt = <1050000 1050000 1200000>;
 +		};
-+		opp-534000000 {
-+			opp-hz = /bits/ 64 <534000000>;
-+			opp-microvolt = <1050000 1000000 1200000>;
++		opp-528000000 {
++			opp-hz = /bits/ 64 <528000000>;
++			opp-microvolt = <1050000 1050000 1200000>;
 +		};
-+		opp-660000000 {
-+			opp-hz = /bits/ 64 <660000000>;
-+			opp-microvolt = <1100000 1000000 1200000>;
++		opp-656000000 {
++			opp-hz = /bits/ 64 <656000000>;
++			opp-microvolt = <1100000 1050000 1200000>;
 +			status = "disabled";
 +		};
-+		opp-786000000 {
-+			opp-hz = /bits/ 64 <786000000>;
-+			opp-microvolt = <1100000 1000000 1200000>;
++		opp-728000000 {
++			opp-hz = /bits/ 64 <728000000>;
++			opp-microvolt = <1100000 1050000 1200000>;
 +			status = "disabled";
 +		};
 +
@@ -953,24 +1071,24 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/r
 +	gpu_opp_table: opp-table2 {
 +		compatible = "operating-points-v2";
 +
-+		opp-216000000 {
-+			opp-hz = /bits/ 64 <216000000>;
-+			opp-microvolt = <1050000 1000000 1100000>;
++		opp-200000000 {
++			opp-hz = /bits/ 64 <200000000>;
++			opp-microvolt = <1050000 1000000 1200000>;
 +		};
 +
-+		opp-312000000 {
-+			opp-hz = /bits/ 64 <312000000>;
-+			opp-microvolt = <1050000 1000000 1100000>;
++		opp-300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++			opp-microvolt = <1050000 1000000 1200000>;
 +		};
 +		
-+		opp-408000000 {
-+			opp-hz = /bits/ 64 <408000000>;
-+			opp-microvolt = <1100000 1000000 1100000>;
++		opp-400000000 {
++			opp-hz = /bits/ 64 <400000000>;
++			opp-microvolt = <1100000 1000000 1200000>;
 +		};
 +		
 +		opp-500000000 {
 +			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <1100000 1000000 1100000>;
++			opp-microvolt = <1100000 1000000 1200000>;
 +			status = "disabled";
 +		};
 +	};
@@ -995,7 +1113,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/r
 +		};
 +
 +		map2 {
-+			trip = <&cpu_alert1>;
++			trip = <&cpu_alert0>;
 +			cooling-device =
 +			<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};

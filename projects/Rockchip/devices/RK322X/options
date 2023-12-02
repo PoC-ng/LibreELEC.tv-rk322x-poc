@@ -17,14 +17,16 @@
     KERNEL_TARGET="zImage"
 
   # SquashFS compression method (gzip / lzo / xz / zstd)
-    SQUASHFS_COMPRESSION="zstd"
+    SQUASHFS_COMPRESSION="lzo"
 
   # Additional kernel make parameters (for example to specify the u-boot loadaddress)
     KERNEL_MAKE_EXTRACMD=" rk322x-box.dtb \
 	rk322x-box-t95d.dtb \
 	rk322x-box-onetv-lite.dtb \
 	rk322x-box-mxq4k.dtb \
+	rk322x-box-mxq4k_r29.dtb \
 	rk322x-box-mxq4kpro.dtb \
+	rk322x-box-mxq4kpro_r329q.dtb \
 	rk322x-box-v884k.dtb \
 	rk322x-box-v88mars.dtb"
 
@@ -38,7 +40,7 @@
   # set the addon project
     ADDON_PROJECT="ARMv7"
 
-    ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware openvfd-driver RTL8192FU "
+    ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware openvfd-driver RTL8192FU irq-balancer "
 
     WIRELESS_DAEMON="wpa_supplicant"
 
