@@ -427,7 +427,7 @@ index 8de6fd2e8eef..002b1a600f93 100644
  #define RK3066_ACLK_MAX_FREQ (300 * 1000 * 1000)
 -#define RK3288_ACLK_MAX_FREQ (400 * 1000 * 1000)
 +#define RK3288_ACLK_MAX_FREQ (300 * 1000 * 1000)
-+#define RK3399_ACLK_MAX_FREQ (400 * 1000 * 1000)
++#define RK3399_ACLK_MAX_FREQ (300 * 1000 * 1000)
  
  /*
   * Supported formats.
