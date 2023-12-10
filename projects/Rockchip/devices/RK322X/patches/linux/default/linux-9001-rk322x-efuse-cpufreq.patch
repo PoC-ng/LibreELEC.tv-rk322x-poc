@@ -127,7 +127,7 @@ diff -ruPN linux-6.1.19/drivers/cpufreq/rk322x-cpufreq-nvmem.c linux-new/drivers
 +	 * the slowest bin. Expected efuse values are 1-3, slowest
 +	 * to fastest.
 +	 */
-+	if (cpuleakage[0] <= 5)
++	if (cpuleakage[0] < 8)
 +		*versions = 0;
 +	else
 +		*versions = 1;

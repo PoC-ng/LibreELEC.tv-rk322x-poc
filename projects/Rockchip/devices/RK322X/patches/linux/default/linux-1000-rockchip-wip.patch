@@ -801,30 +801,3 @@ index 8e7a866e39e5..217ee6568f9e 100644
  	i2s1: i2s1@100b0000 {
  		compatible = "rockchip,rk3228-i2s", "rockchip,rk3066-i2s";
  		reg = <0x100b0000 0x4000>;
-
-From b9de203365b74ee111d977424ed3fe8d325cc39b Mon Sep 17 00:00:00 2001
-From: Alex Bee <knaerzche@gmail.com>
-Date: Mon, 30 Nov 2020 21:12:12 +0100
-Subject: [PATCH] ARM: dts: rk3xx add L2 properties
-
-As per vendor source, these properties have to be set. It has been
-oberserved without them, cpu(s) might hang on boot process.
-
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
----
- arch/arm/boot/dts/rk3xxx.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 97415180d5bb..d04391e8ee7c 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -99,6 +99,8 @@ L2: cache-controller@10138000 {
- 		reg = <0x10138000 0x1000>;
- 		cache-unified;
- 		cache-level = <2>;
-+		prefetch-data = <1>;
-+		prefetch-instr = <1>;
- 	};
- 
- 	scu@1013c000 {
