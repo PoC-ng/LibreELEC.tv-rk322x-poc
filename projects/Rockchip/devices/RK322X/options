@@ -17,7 +17,7 @@
     KERNEL_TARGET="zImage"
 
   # SquashFS compression method (gzip / lzo / xz / zstd)
-    SQUASHFS_COMPRESSION="lzo"
+    SQUASHFS_COMPRESSION="lz4"
 
   # Additional kernel make parameters (for example to specify the u-boot loadaddress)
     KERNEL_MAKE_EXTRACMD=" rk322x-box.dtb \
