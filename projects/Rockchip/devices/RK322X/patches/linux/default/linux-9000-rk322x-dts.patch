@@ -451,7 +451,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dts linux-new/arch/arm/boot/dts/rk
 +};
 diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/rk322x-box.dtsi
 --- linux/arch/arm/boot/dts/rk322x-box.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-12-04 18:32:06.560068386 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-box.dtsi	2023-12-10 14:40:23.173991422 +0100
 @@ -0,0 +1,465 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
@@ -668,7 +668,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-box.dtsi linux-new/arch/arm/boot/dts/r
 +		<&cru ACLK_CPU>, <&cru HCLK_CPU>,
 +		<&cru PCLK_CPU>, <&cru ACLK_VOP>;
 +
-+    assigned-clock-rates = <1200000000>, <600000000>,
++    assigned-clock-rates = <1200000000>, <816000000>,
 +			    <500000000>, <150000000>,
 +			    <150000000>, <75000000>,
 +			    <150000000>, <150000000>,
@@ -971,7 +971,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-legacy.dtsi linux-new/arch/arm/boot/dt
 +};*/
 diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/rk322x-opp.dtsi
 --- linux/arch/arm/boot/dts/rk322x-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2023-12-09 07:52:12.212422019 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2023-12-15 18:10:00.384432057 +0100
 @@ -0,0 +1,157 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
