@@ -964,7 +964,7 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-legacy.dtsi linux-new/arch/arm/boot/dt
 +};*/
 diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/rk322x-opp.dtsi
 --- linux/arch/arm/boot/dts/rk322x-opp.dtsi	1970-01-01 01:00:00.000000000 +0100
-+++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2023-12-29 09:04:28.655812832 +0100
++++ linux-new/arch/arm/boot/dts/rk322x-opp.dtsi	2024-01-12 08:25:18.420287118 +0100
 @@ -0,0 +1,157 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
@@ -993,8 +993,8 @@ diff -ruPN linux/arch/arm/boot/dts/rk322x-opp.dtsi linux-new/arch/arm/boot/dts/r
 +		opp-696000000 {
 +			opp-hz = /bits/ 64 <696000000>;
 +			opp-microvolt = <1000000 1000000 1275000>;
-+			opp-microvolt-L0 = <1000000 1000000 1275000>;
-+			opp-microvolt-L1 = <975000 975000 1275000>;
++			opp-microvolt-L0 = <1025000 1000000 1275000>;
++			opp-microvolt-L1 = <1000000 1000000 1275000>;
 +		};
 +		opp-816000000 {
 +			opp-hz = /bits/ 64 <816000000>;
