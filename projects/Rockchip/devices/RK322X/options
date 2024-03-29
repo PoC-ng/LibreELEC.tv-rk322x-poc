@@ -42,6 +42,6 @@
 
     ADDITIONAL_PACKAGES="$ADDITIONAL_PACKAGES rockchip-firmware openvfd-driver RTL8192FU RTL8812CU irq-balancer "
 
-    WIRELESS_DAEMON="wpa_supplicant"
+    WIRELESS_DAEMON="iwd"
 
     IR_REMOTE_KEYMAPS=" rockchip_remote "
