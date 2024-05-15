@@ -1,7 +1,7 @@
 diff -ruPN u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/arch/arm/dts/rk322x-box.dts u-boot-new/arch/arm/dts/rk322x-box.dts
 --- u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/arch/arm/dts/rk322x-box.dts	1970-01-01 01:00:00.000000000 +0100
 +++ u-boot-new/arch/arm/dts/rk322x-box.dts	2022-01-26 10:11:24.960209651 +0100
-@@ -0,0 +1,36 @@
+@@ -0,0 +1,40 @@
 +/*
 + * (C) Copyright 2017 Rockchip Electronics Co., Ltd.
 + *
@@ -29,14 +29,18 @@ diff -ruPN u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/arch/arm/dts/rk322x-b
 +};
 +
 +&emmc {
++	clock-frequency = <50000000>;
++	clock-freq-min-max = <400000 50000000>;
++	mmc-hs200-1_8v;
++       max-frequency = <50000000>;
 +	/delete-property/ pinctrl-names; 
-+	/delete-property/ pinctrl-0; 
++	/delete-property/ pinctrl-0;
 +	/delete-property/ default-sample-phase;
 +	status = "okay";
 +};
 +
 +&nandc {
-+	status = "okay";
++	status = "disabled";
 +};
 diff -ruPN u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/arch/arm/dts/rk322x-box.dtsi u-boot-new/arch/arm/dts/rk322x-box.dtsi
 --- u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/arch/arm/dts/rk322x-box.dtsi	1970-01-01 01:00:00.000000000 +0100
@@ -204,7 +208,7 @@ diff -ruPN u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/configs/rk322x-linux-
 +CONFIG_TARGET_EVB_RK3229=y
 +CONFIG_SPL_STACK_R_ADDR=0x60600000
 +CONFIG_DEFAULT_DEVICE_TREE="rk322x-box"
-+CONFIG_BOOTDELAY=0
++CONFIG_BOOTDELAY=1
 +CONFIG_DEBUG_UART=y
 +CONFIG_FIT=y
 +CONFIG_FIT_VERBOSE=y
@@ -221,7 +225,7 @@ diff -ruPN u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/configs/rk322x-linux-
 +CONFIG_CMD_GPT=y
 +CONFIG_CMD_MMC=y
 +CONFIG_CMD_USB=y
-+CONFIG_CMD_NET=y
++#CONFIG_CMD_NET is not set
 +CONFIG_CMD_USB_MASS_STORAGE=y
 +# CONFIG_CMD_SETEXPR is not set
 +CONFIG_CMD_TIME=y
@@ -276,7 +280,7 @@ diff -ruPN u-boot-e311da245800596d57b7b7d91ebd4a730747a9ec/configs/rk322x-linux-
 +CONFIG_DM_RESET=y
 +CONFIG_RESET_ROCKCHIP=y
 +#CONFIG_ROCKCHIP_SFC is not set
-+CONFIG_RKNAND=y
++#CONFIG_RKNAND is not set
 +CONFIG_LZ4=y
 +CONFIG_LZO=y
 +CONFIG_LZMA=y
